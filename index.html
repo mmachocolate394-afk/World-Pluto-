@@ -1,0 +1,50 @@
+<!-- Dashboard HTML Structure -->
+<div class="dashboard">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">🌍 World Pluto</div>
+    <nav>
+      <a href="#" class="active"><i>📊</i> Dashboard</a>
+      <a href="#"><i>👛</i> Wallet</a>
+      <a href="#"><i>💸</i> Withdraw</a>
+      <a href="#"><i>📜</i> Transactions</a>
+      <a href="#"><i>👤</i> Profile</a>
+      <a href="#"><i>⚙️</i> Settings</a>
+    </nav>
+  </aside>
+
+  <!-- Main Area -->
+  <main class="main-content">
+    <header class="topbar">
+      <h2>Welcome back, Alex! 👋</h2>
+      <div class="topbar-actions">
+        <button class="btn-primary">Withdraw</button>
+        <div class="avatar">A</div>
+      </div>
+    </header>
+
+    <!-- Balance Card -->
+    <section class="balance-card glass">
+      <p>Total Balance</p>
+      <h1>$ 24,562.00</h1>
+      <div class="sparkline"><!-- SVG chart --></div>
+    </section>
+
+    <!-- Quick Actions -->
+    <section class="quick-actions">
+      <button class="action-btn glass">➕ Deposit</button>
+      <button class="action-btn glass">💸 Withdraw</button>
+      <button class="action-btn glass">📤 Send</button>
+      <button class="action-btn glass">📥 Request</button>
+    </section>
+
+    <!-- Transactions -->
+    <section class="transactions glass">
+      <h3>Recent Transactions</h3>
+      <table>
+        <tr><td>Deposit</td><td>+$500</td><td class="badge success">Completed</td></tr>
+        <tr><td>Withdrawal</td><td>-$200</td><td class="badge pending">Pending</td></tr>
+      </table>
+    </section>
+  </main>
+</div>
