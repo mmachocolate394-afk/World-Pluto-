@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Pluto – Trading & Wallet</title>
+    <style>
+        /* ========== ALL PREVIOUS STYLES (unchanged) ========== */
+        :root {
+            --bg-primary: #0a0a14;
+            --bg-secondary: #111124;
+            --bg-card: rgba(255, 255, 255, 0.05);
+            --bg-input: rgba(255, 255, 255, 0.08);
+            --border: rgba(255, 255, 255, 0.15);
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0c8;
+            --text-muted: #7a7a9a;
+            --accent: #6a11cb;
+            --accent2: #2575fc;
+            --accent3: #ff6b6b;
+            --gold: #f9ca24;
+            --success: #2ed573;
+            --danger: #ff4757;
+            --warning: #ffa502;
+            --info: #3742fa;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --radius-xs: 6px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --shadow-glow: 0 0 40px rgba(106, 17, 203, 0.4);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            --font: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .glass-hover:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .site-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 900;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(106, 17, 203, 0.6);
+            animation: pulseGlow 2s infinite;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(106, 17, 203, 0.6); }
+            50% { box-shadow: 0 0 40px rgba(37, 117, 252, 0.8); }
+        }
+        .logo span {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .nav-links { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition);
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 20px;
+        }
+        .nav-links a:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
+
+        .card {
+            padding: 40px;
+            border-radius: var(--radius);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            transition: var(--transition);
+        }
+        .card:hover { border-color: rgba(255, 255, 255, 0.3); }
+        .card-header { text-align: center; margin-bottom: 32px; }
+        .card-header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff, #b0b0c8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .card-header p { color: var(--text-secondary); font-size: 14px; }
+        .icon-badge {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 28px;
+            color: #fff;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 15px;
+            transition: var(--transition);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--accent2);
+            box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.2);
+        }
+        .form-group input::placeholder { color: var(--text-muted); }
+        .form-group select {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23b0b0c8' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
+        }
+        .form-group textarea { min-height: 100px; resize: vertical; }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 28px;
+            font-size: 15px;
+            font-weight: 700;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            letter-spacing: 0.5px;
+            width: 100%;
+            text-transform: uppercase;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(106, 17, 203, 0.4);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(37, 117, 252, 0.6); }
+        .btn-secondary { background: transparent; color: var(--text-primary); border: 1px solid var(--border); }
+        .btn-secondary:hover { border-color: var(--accent2); background: rgba(37, 117, 252, 0.1); transform: translateY(-2px); }
+        .btn-danger { background: linear-gradient(135deg, #ff4757, #ff6b6b); color: #fff; }
+        .btn-sm { padding: 10px 18px; font-size: 13px; width: auto; }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 24px 0;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .text-center { text-align: center; }
+        .mt-16 { margin-top: 16px; }
+        .mt-24 { margin-top: 24px; }
+        .mb-16 { margin-bottom: 16px; }
+        .mb-24 { margin-bottom: 24px; }
+        .flex { display: flex; }
+        .flex-center { display: flex; align-items: center; justify-content: center; }
+        .flex-between { display: flex; align-items: center; justify-content: space-between; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+        .tabs {
+            display: flex;
+            gap: 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50px;
+            padding: 4px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+        .tab {
+            flex: 1;
+            padding: 12px 16px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 50px;
+            transition: var(--transition);
+            border: none;
+            background: transparent;
+        }
+        .tab.active {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: #fff;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(106, 17, 203, 0.4);
+        }
+        .tab:hover:not(.active) { color: #fff; }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 24px;
+            min-height: 70vh;
+            margin-bottom: 40px;
+        }
+        .sidebar {
+            padding: 24px;
+            border-radius: var(--radius);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+        .sidebar .user-info {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        .sidebar .avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 32px;
+            color: #fff;
+            font-weight: 700;
+            box-shadow: var(--shadow-glow);
+        }
+        .sidebar .username { font-weight: 700; font-size: 18px; }
+        .sidebar .user-email { font-size: 13px; color: var(--text-muted); }
+        .sidebar .menu { list-style: none; }
+        .sidebar .menu li { margin-bottom: 4px; }
+        .sidebar .menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .sidebar .menu a:hover,
+        .sidebar .menu a.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+        .sidebar .menu a .icon { font-size: 18px; width: 24px; text-align: center; }
+
+        .main-content {
+            padding: 32px;
+            border-radius: var(--radius);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            padding: 28px;
+            border-radius: var(--radius);
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .balance-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .balance-card .label { font-size: 14px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; }
+        .balance-card .amount { font-size: 36px; font-weight: 800; margin: 8px 0; }
+        .balance-card .sparkline { margin-top: 12px; opacity: 0.9; }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .action-btn {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-4px);
+            border-color: var(--accent2);
+        }
+        .action-btn .icon { font-size: 24px; margin-bottom: 8px; display: block; }
+
+        .transactions table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        .transactions th {
+            text-align: left;
+            padding: 12px 16px;
+            color: var(--text-muted);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+        }
+        .transactions td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .transactions tr:last-child td { border-bottom: none; }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .badge-success { background: rgba(46, 213, 115, 0.2); color: var(--success); }
+        .badge-pending { background: rgba(255, 165, 2, 0.2); color: var(--warning); }
+        .badge-failed { background: rgba(255, 71, 87, 0.2); color: var(--danger); }
+
+        .withdrawal-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .withdrawal-option {
+            padding: 20px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .withdrawal-option:hover {
+            border-color: var(--accent2);
+            background: rgba(37, 117, 252, 0.1);
+        }
+        .withdrawal-option.selected {
+            border-color: var(--accent2);
+            background: rgba(37, 117, 252, 0.15);
+            box-shadow: var(--shadow-glow);
+        }
+        .withdrawal-option .icon { font-size: 36px; margin-bottom: 8px; }
+        .withdrawal-option .name { font-weight: 700; font-size: 16px; }
+        .withdrawal-option .desc { font-size: 12px; color: var(--text-muted); }
+
+        .bank-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: rgba(0,0,0,0.2);
+        }
+        .bank-list::-webkit-scrollbar { width: 6px; }
+        .bank-list::-webkit-scrollbar-track { background: transparent; }
+        .bank-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        .bank-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .bank-item:last-child { border-bottom: none; }
+        .bank-item:hover { background: rgba(255,255,255,0.05); }
+        .bank-item.selected {
+            background: rgba(37, 117, 252, 0.2);
+            border-left: 3px solid var(--accent2);
+        }
+        .bank-item .bank-flag { font-size: 24px; }
+        .bank-item .bank-name { font-weight: 600; font-size: 14px; }
+        .bank-item .bank-country { font-size: 12px; color: var(--text-muted); }
+
+        .about-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        .about-text h3 {
+            font-size: 22px;
+            color: var(--accent2);
+            margin-bottom: 12px;
+        }
+        .about-text p {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            font-size: 15px;
+        }
+        .about-image {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius);
+            padding: 40px;
+            text-align: center;
+            border: 1px solid var(--border);
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+        .about-image .big-icon {
+            font-size: 80px;
+            color: var(--accent2);
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .alert {
+            padding: 14px 18px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .alert-success { background: rgba(46, 213, 115, 0.15); border: 1px solid var(--success); color: var(--success); }
+        .alert-error { background: rgba(255, 71, 87, 0.15); border: 1px solid var(--danger); color: var(--danger); }
+        .alert-info { background: rgba(55, 66, 250, 0.15); border: 1px solid var(--info); color: var(--info); }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        .page.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .form-row { grid-template-columns: 1fr; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .withdrawal-options { grid-template-columns: 1fr; }
+            .quick-actions { grid-template-columns: 1fr 1fr; }
+            .card { padding: 24px; }
+            .site-header { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="starfield"></canvas>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="site-header">
+            <a class="logo" onclick="showPage('login')">
+                <div class="logo-icon">🪐</div>
+                <span>World Pluto</span>
+            </a>
+            <nav class="nav-links">
+                <a onclick="showPage('login')">Login</a>
+                <a onclick="showPage('register')">Sign Up</a>
+                <a onclick="showPage('about')">About Us</a>
+                <a onclick="showPage('altLogin')">Member Login</a>
+                <a onclick="showPage('dashboard')" id="navDashboardLink" style="display:none;">Dashboard</a>
+                <a onclick="logoutUser()" id="navLogoutLink" style="display:none; color:var(--danger);">Logout</a>
+            </nav>
+        </header>
+
+        <!-- LOGIN PAGE -->
+        <div class="page active" id="page-login">
+            <div class="card" style="max-width: 480px; margin: 40px auto;">
+                <div class="card-header">
+                    <div class="icon-badge">🔐</div>
+                    <h2>Welcome Back</h2>
+                    <p>Sign in to World Pluto to continue your journey</p>
+                </div>
+                <div id="loginAlert"></div>
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label>Username or Email</label>
+                        <input type="text" id="loginUsername" placeholder="Enter your username or email" required autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="loginPassword" placeholder="Enter your password" required autocomplete="current-password">
+                    </div>
+                    <div class="flex-between mb-24">
+                        <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-secondary); cursor:pointer;">
+                            <input type="checkbox" id="rememberMe" style="width:auto; accent-color:var(--accent2);"> Remember me
+                        </label>
+                        <a href="#" style="font-size:13px; color:var(--accent2); text-decoration:none; cursor:pointer;">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Sign In</button>
+                </form>
+                <div class="divider">or</div>
+                <button class="btn btn-secondary" onclick="showPage('register')">Create New Account</button>
+                <p class="text-center mt-16" style="font-size:13px; color:var(--text-muted);">
+                    Member with special credentials? <a href="#" onclick="showPage('altLogin')" style="color:var(--accent2); cursor:pointer;">Use alternate login</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- REGISTER PAGE -->
+        <div class="page" id="page-register">
+            <div class="card" style="max-width: 600px; margin: 40px auto;">
+                <div class="card-header">
+                    <div class="icon-badge">📝</div>
+                    <h2>Create Your Account</h2>
+                    <p>Join World Pluto and start trading beyond Earth</p>
+                </div>
+                <div id="registerAlert"></div>
+                <form id="registerForm" onsubmit="handleRegister(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>First Name *</label>
+                            <input type="text" id="regFirstName" placeholder="John" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name *</label>
+                            <input type="text" id="regLastName" placeholder="Doe" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address *</label>
+                        <input type="email" id="regEmail" placeholder="john.doe@example.com" required autocomplete="email">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Username *</label>
+                            <input type="text" id="regUsername" placeholder="Choose a username" required autocomplete="username">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="tel" id="regPhone" placeholder="+1 (555) 000-0000">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Password *</label>
+                            <input type="password" id="regPassword" placeholder="Min 8 characters" required minlength="8" autocomplete="new-password">
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password *</label>
+                            <input type="password" id="regConfirmPassword" placeholder="Confirm password" required autocomplete="new-password">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Date of Birth *</label>
+                            <input type="date" id="regDob" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Country *</label>
+                            <select id="regCountry" required>
+                                <option value="">Select Country</option>
+                                <option value="US">🇺🇸 United States</option>
+                                <option value="UK">🇬🇧 United Kingdom</option>
+                                <option value="CA">🇨🇦 Canada</option>
+                                <option value="AU">🇦🇺 Australia</option>
+                                <option value="DE">🇩🇪 Germany</option>
+                                <option value="FR">🇫🇷 France</option>
+                                <option value="ES">🇪🇸 Spain</option>
+                                <option value="IT">🇮🇹 Italy</option>
+                                <option value="JP">🇯🇵 Japan</option>
+                                <option value="CN">🇨🇳 China</option>
+                                <option value="IN">🇮🇳 India</option>
+                                <option value="BR">🇧🇷 Brazil</option>
+                                <option value="MX">🇲🇽 Mexico</option>
+                                <option value="ZA">🇿🇦 South Africa</option>
+                                <option value="NG">🇳🇬 Nigeria</option>
+                                <option value="EG">🇪🇬 Egypt</option>
+                                <option value="KE">🇰🇪 Kenya</option>
+                                <option value="AE">🇦🇪 UAE</option>
+                                <option value="SA">🇸🇦 Saudi Arabia</option>
+                                <option value="SG">🇸🇬 Singapore</option>
+                                <option value="HK">🇭🇰 Hong Kong</option>
+                                <option value="NZ">🇳🇿 New Zealand</option>
+                                <option value="IE">🇮🇪 Ireland</option>
+                                <option value="NL">🇳🇱 Netherlands</option>
+                                <option value="SE">🇸🇪 Sweden</option>
+                                <option value="NO">🇳🇴 Norway</option>
+                                <option value="DK">🇩🇰 Denmark</option>
+                                <option value="FI">🇫🇮 Finland</option>
+                                <option value="PT">🇵🇹 Portugal</option>
+                                <option value="GR">🇬🇷 Greece</option>
+                                <option value="PL">🇵🇱 Poland</option>
+                                <option value="CZ">🇨🇿 Czech Republic</option>
+                                <option value="AT">🇦🇹 Austria</option>
+                                <option value="CH">🇨🇭 Switzerland</option>
+                                <option value="BE">🇧🇪 Belgium</option>
+                                <option value="RU">🇷🇺 Russia</option>
+                                <option value="TR">🇹🇷 Turkey</option>
+                                <option value="IL">🇮🇱 Israel</option>
+                                <option value="KR">🇰🇷 South Korea</option>
+                                <option value="TH">🇹🇭 Thailand</option>
+                                <option value="VN">🇻🇳 Vietnam</option>
+                                <option value="PH">🇵🇭 Philippines</option>
+                                <option value="MY">🇲🇾 Malaysia</option>
+                                <option value="ID">🇮🇩 Indonesia</option>
+                                <option value="PK">🇵🇰 Pakistan</option>
+                                <option value="BD">🇧🇩 Bangladesh</option>
+                                <option value="LK">🇱🇰 Sri Lanka</option>
+                                <option value="NP">🇳🇵 Nepal</option>
+                                <option value="AR">🇦🇷 Argentina</option>
+                                <option value="CL">🇨🇱 Chile</option>
+                                <option value="CO">🇨🇴 Colombia</option>
+                                <option value="PE">🇵🇪 Peru</option>
+                                <option value="VE">🇻🇪 Venezuela</option>
+                                <option value="GH">🇬🇭 Ghana</option>
+                                <option value="ET">🇪🇹 Ethiopia</option>
+                                <option value="TZ">🇹🇿 Tanzania</option>
+                                <option value="UG">🇺🇬 Uganda</option>
+                                <option value="RW">🇷🇼 Rwanda</option>
+                                <option value="MA">🇲🇦 Morocco</option>
+                                <option value="DZ">🇩🇿 Algeria</option>
+                                <option value="TN">🇹🇳 Tunisia</option>
+                                <option value="IQ">🇮🇶 Iraq</option>
+                                <option value="JO">🇯🇴 Jordan</option>
+                                <option value="LB">🇱🇧 Lebanon</option>
+                                <option value="QA">🇶🇦 Qatar</option>
+                                <option value="KW">🇰🇼 Kuwait</option>
+                                <option value="BH">🇧🇭 Bahrain</option>
+                                <option value="OM">🇴🇲 Oman</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label style="display:flex; align-items:flex-start; gap:10px; font-size:13px; color:var(--text-secondary); text-transform:none; letter-spacing:0;">
+                            <input type="checkbox" id="regTerms" required style="width:auto; margin-top:4px; accent-color:var(--accent2);">
+                            <span>I agree to the <a href="#" style="color:var(--accent2);">Terms of Service</a> and <a href="#" style="color:var(--accent2);">Privacy Policy</a> *</span>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Account</button>
+                </form>
+                <p class="text-center mt-16" style="font-size:13px; color:var(--text-muted);">
+                    Already have an account? <a href="#" onclick="showPage('login')" style="color:var(--accent2); cursor:pointer;">Sign In</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- ABOUT US PAGE -->
+        <div class="page" id="page-about">
+            <div class="card" style="max-width: 900px; margin: 40px auto;">
+                <div class="card-header">
+                    <div class="icon-badge">🌌</div>
+                    <h2>About World Pluto</h2>
+                    <p>Empowering interstellar trading since 2020</p>
+                </div>
+                <div class="about-section">
+                    <div class="about-text">
+                        <h3>Who We Are</h3>
+                        <p>World Pluto is a next-generation trading platform that brings the universe of financial opportunities to your fingertips. Founded in 2020, we've grown to serve over 2 million traders across 180+ countries, providing institutional-grade tools, real-time market data, and a secure environment for all your trading needs.</p>
+                        <p>Our mission is to democratize access to global markets, making it as easy to trade from Earth as it is from the far reaches of the solar system. Whether you're a seasoned investor or just starting out, World Pluto offers the tools, resources, and support to help you reach for the stars.</p>
+                    </div>
+                    <div class="about-image">
+                        <div class="big-icon">🚀</div>
+                        <h3 style="color:var(--accent2);">Trusted by 2M+ Traders</h3>
+                        <p class="text-muted" style="font-size:14px;">Global reach · Secure platform · 24/7 support</p>
+                    </div>
+                </div>
+                <div class="grid-3 mt-24">
+                    <div style="padding:20px; background:rgba(255,255,255,0.05); border-radius:var(--radius-sm); text-align:center;">
+                        <div style="font-size:32px; margin-bottom:8px;">🛡️</div>
+                        <h4>Military-Grade Security</h4>
+                        <p style="font-size:13px; color:var(--text-muted);">Your assets are protected with advanced encryption and multi-factor authentication.</p>
+                    </div>
+                    <div style="padding:20px; background:rgba(255,255,255,0.05); border-radius:var(--radius-sm); text-align:center;">
+                        <div style="font-size:32px; margin-bottom:8px;">⚡</div>
+                        <h4>Lightning-Fast Execution</h4>
+                        <p style="font-size:13px; color:var(--text-muted);">Execute trades in milliseconds with our high-performance trading engine.</p>
+                    </div>
+                    <div style="padding:20px; background:rgba(255,255,255,0.05); border-radius:var(--radius-sm); text-align:center;">
+                        <div style="font-size:32px; margin-bottom:8px;">🌍</div>
+                        <h4>Global Reach</h4>
+                        <p style="font-size:13px; color:var(--text-muted);">Access 100+ markets and 50+ currencies from anywhere in the world.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ALTERNATE LOGIN PAGE -->
+        <div class="page" id="page-altLogin">
+            <div class="card" style="max-width: 480px; margin: 40px auto;">
+                <div class="card-header">
+                    <div class="icon-badge">🔑</div>
+                    <h2>Member Login</h2>
+                    <p>For special members with additional credentials</p>
+                </div>
+                <div id="altLoginAlert"></div>
+                <form id="altLoginForm" onsubmit="handleAltLogin(event)">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="altUsername" placeholder="Enter your member username" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="altPassword" placeholder="Enter your password" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Security Code</label>
+                        <input type="text" id="altSecurityCode" placeholder="6-digit code" required maxlength="6" pattern="[0-9]{6}">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Access Account</button>
+                </form>
+                <p class="text-center mt-16" style="font-size:13px; color:var(--text-muted);">
+                    Regular user? <a href="#" onclick="showPage('login')" style="color:var(--accent2); cursor:pointer;">Go to standard login</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- USER DASHBOARD -->
+        <div class="page" id="page-dashboard">
+            <div class="dashboard-grid">
+                <aside class="sidebar">
+                    <div class="user-info">
+                        <div class="avatar" id="dashAvatar">U</div>
+                        <div class="username" id="dashUsername">User</div>
+                        <div class="user-email" id="dashEmail">user@example.com</div>
+                    </div>
+                    <ul class="menu">
+                        <li><a class="active" onclick="showDashboardSection('overview')"><span class="icon">📊</span> Dashboard</a></li>
+                        <li><a onclick="showDashboardSection('wallet')"><span class="icon">👛</span> Wallet</a></li>
+                        <li><a onclick="showDashboardSection('withdraw')"><span class="icon">💸</span> Withdraw</a></li>
+                        <li><a onclick="showDashboardSection('transactions')"><span class="icon">📜</span> Transactions</a></li>
+                        <li><a onclick="showDashboardSection('profile')"><span class="icon">👤</span> Profile</a></li>
+                    </ul>
+                    <button class="btn btn-danger btn-sm" style="width:100%; margin-top:16px;" onclick="logoutUser()">Logout</button>
+                </aside>
+
+                <main class="main-content" id="dashboardMain">
+                    <div id="dash-overview">
+                        <h2 style="margin-bottom:24px;">Welcome back, <span id="dashFirstName">User</span>! 👋</h2>
+                        <div class="balance-card">
+                            <div class="label">Total Balance</div>
+                            <div class="amount">$ 24,562.00</div>
+                            <div class="sparkline">
+                                <svg width="100%" height="40" viewBox="0 0 300 40" preserveAspectRatio="none">
+                                    <polyline points="0,30 50,25 100,28 150,15 200,20 250,10 300,18" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="2"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="quick-actions">
+                            <div class="action-btn" onclick="showDashboardSection('wallet')"><span class="icon">➕</span> Deposit</div>
+                            <div class="action-btn" onclick="showDashboardSection('withdraw')"><span class="icon">💸</span> Withdraw</div>
+                            <div class="action-btn"><span class="icon">📤</span> Send</div>
+                            <div class="action-btn"><span class="icon">📥</span> Request</div>
+                        </div>
+                        <div class="transactions glass" style="padding:20px;">
+                            <h3 style="margin-bottom:16px;">Recent Transactions</h3>
+                            <table>
+                                <thead>
+                                    <tr><th>Type</th><th>Amount</th><th>Status</th><th>Date</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Deposit</td><td style="color:var(--success);">+$500.00</td><td><span class="badge badge-success">Completed</span></td><td>Today</td></tr>
+                                    <tr><td>Withdrawal</td><td style="color:var(--danger);">-$200.00</td><td><span class="badge badge-pending">Pending</span></td><td>Yesterday</td></tr>
+                                    <tr><td>Deposit</td><td style="color:var(--success);">+$1,000.00</td><td><span class="badge badge-success">Completed</span></td><td>Sep 1</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="dash-wallet" style="display:none;">
+                        <h2 style="margin-bottom:20px;">👛 Wallet</h2>
+                        <div class="balance-card" style="margin-bottom:20px;">
+                            <div class="label">Available Balance</div>
+                            <div class="amount">$ 24,562.00</div>
+                        </div>
+                        <div class="grid-2">
+                            <div class="glass" style="padding:20px;">
+                                <h4>Deposit Funds</h4>
+                                <div class="form-group mt-16">
+                                    <label>Amount</label>
+                                    <input type="number" id="depositAmount" placeholder="0.00" min="1">
+                                </div>
+                                <button class="btn btn-primary btn-sm" onclick="simulateDeposit()">Deposit</button>
+                            </div>
+                            <div class="glass" style="padding:20px;">
+                                <h4>Bank Account</h4>
+                                <p class="text-muted" style="font-size:13px;">Linked Bank: Chase Bank ****1234</p>
+                                <button class="btn btn-secondary btn-sm" onclick="showDashboardSection('withdraw')">Manage</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="dash-withdraw" style="display:none;">
+                        <h2 style="margin-bottom:20px;">💸 Withdraw Funds</h2>
+                        <div class="withdrawal-options">
+                            <div class="withdrawal-option selected" id="optWallet" onclick="selectWithdrawal('wallet')">
+                                <div class="icon">👛</div>
+                                <div class="name">Wallet</div>
+                                <div class="desc">Withdraw to your World Pluto wallet</div>
+                            </div>
+                            <div class="withdrawal-option" id="optBank" onclick="selectWithdrawal('bank')">
+                                <div class="icon">🏦</div>
+                                <div class="name">Bank Account</div>
+                                <div class="desc">Withdraw to a linked bank account</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Amount (USD)</label>
+                            <input type="number" id="withdrawAmount" placeholder="0.00" min="1">
+                        </div>
+                        <div id="bankSelection" style="display:none;">
+                            <div class="form-group">
+                                <label>Select Country (Starts with USA)</label>
+                                <select id="withdrawCountry" onchange="updateBankList()">
+                                    <option value="USA">🇺🇸 United States</option>
+                                    <option value="UK">🇬🇧 United Kingdom</option>
+                                    <option value="CA">🇨🇦 Canada</option>
+                                    <option value="AU">🇦🇺 Australia</option>
+                                    <option value="DE">🇩🇪 Germany</option>
+                                    <option value="FR">🇫🇷 France</option>
+                                    <option value="ES">🇪🇸 Spain</option>
+                                    <option value="IT">🇮🇹 Italy</option>
+                                    <option value="JP">🇯🇵 Japan</option>
+                                    <option value="CN">🇨🇳 China</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Select Bank</label>
+                                <div class="bank-list" id="bankListContainer"></div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="simulateWithdrawal()">Withdraw</button>
+                        <div id="withdrawAlert" class="mt-16"></div>
+                    </div>
+
+                    <div id="dash-transactions" style="display:none;">
+                        <h2 style="margin-bottom:20px;">📜 Transaction History</h2>
+                        <div class="transactions glass" style="padding:20px;">
+                            <table>
+                                <thead>
+                                    <tr><th>Type</th><th>Amount</th><th>Status</th><th>Date</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Deposit</td><td style="color:var(--success);">+$500.00</td><td><span class="badge badge-success">Completed</span></td><td>Today</td></tr>
+                                    <tr><td>Withdrawal</td><td style="color:var(--danger);">-$200.00</td><td><span class="badge badge-pending">Pending</span></td><td>Yesterday</td></tr>
+                                    <tr><td>Deposit</td><td style="color:var(--success);">+$1,000.00</td><td><span class="badge badge-success">Completed</span></td><td>Sep 1</td></tr>
+                                    <tr><td>Withdrawal</td><td style="color:var(--danger);">-$50.00</td><td><span class="badge badge-success">Completed</span></td><td>Aug 28</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="dash-profile" style="display:none;">
+                        <h2 style="margin-bottom:20px;">👤 Profile</h2>
+                        <div class="glass" style="padding:24px;">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" id="profileName" value="John Doe">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="profileEmail" value="john.doe@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label>Phone</label>
+                                <input type="tel" id="profilePhone" value="+1 (555) 000-0000">
+                            </div>
+                            <button class="btn btn-primary btn-sm" onclick="alert('Profile updated (simulation)')">Update Profile</button>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+    CHATWAY WIDGET
+    Replace YOUR_CHATWAY_TOKEN with your actual token from Chatway.
+    ═══════════════════════════════════════════════════════════════ -->
+    <script>
+        // Chatway embed code
+        (function(w,d,s,o,f,js,fjs){
+            w['Chatway']=o;w[o]=w[o]||function(){(w[o].q=w[o].q||[]).push(arguments)};
+            js=d.createElement(s),fjs=d.getElementsByTagName(s)[0];
+            js.id=o;js.src=f;js.async=1;fjs.parentNode.insertBefore(js,fjs);
+        }(window,document,'script','chatway','https://cdn.chatway.app/widget.js'));
+        chatway('init', {
+            token: 'YOUR_CHATWAY_TOKEN'  // <-- REPLACE THIS
+        });
+    </script>
+    <!-- End Chatway Widget -->
+
+    <!-- ========== EXISTING SCRIPT (unchanged) ========== -->
+    <script>
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        const starCount = 200;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function initStars() {
+            stars = [];
+            for (let i = 0; i < starCount; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 1.5 + 0.5,
+                    speed: Math.random() * 0.5 + 0.2,
+                    opacity: Math.random() * 0.8 + 0.2,
+                    twinkleSpeed: Math.random() * 0.02 + 0.005
+                });
+            }
+        }
+        initStars();
+
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            stars.forEach(star => {
+                star.y += star.speed;
+                if (star.y > canvas.height) star.y = 0;
+                star.opacity += Math.sin(Date.now() * star.twinkleSpeed) * 0.02;
+                star.opacity = Math.max(0.1, Math.min(1, star.opacity));
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+                ctx.fill();
+            });
+            requestAnimationFrame(drawStars);
+        }
+        drawStars();
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page-' + pageId);
+            if (target) target.classList.add('active');
+            updateNavVisibility();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateNavVisibility() {
+            const isLoggedIn = localStorage.getItem('wpLoggedIn') === 'true';
+            document.getElementById('navDashboardLink').style.display = isLoggedIn ? 'inline' : 'none';
+            document.getElementById('navLogoutLink').style.display = isLoggedIn ? 'inline' : 'none';
+        }
+
+        function registerUser(userData) {
+            const users = JSON.parse(localStorage.getItem('wpUsers') || '[]');
+            if (users.some(u => u.username === userData.username)) {
+                return { success: false, message: 'Username already exists.' };
+            }
+            if (users.some(u => u.email === userData.email)) {
+                return { success: false, message: 'Email already registered.' };
+            }
+            users.push(userData);
+            localStorage.setItem('wpUsers', JSON.stringify(users));
+            return { success: true };
+        }
+
+        function authenticateUser(identifier, password, isAlt = false) {
+            const users = JSON.parse(localStorage.getItem('wpUsers') || '[]');
+            const user = users.find(u => u.username === identifier || u.email === identifier);
+            if (!user) {
+                return { success: false, message: 'User not found.' };
+            }
+            if (user.password !== password) {
+                return { success: false, message: 'Incorrect password.' };
+            }
+            return { success: true, user: user };
+        }
+
+        function loginUser(user) {
+            localStorage.setItem('wpLoggedIn', 'true');
+            localStorage.setItem('wpCurrentUser', JSON.stringify(user));
+            updateNavVisibility();
+            showPage('dashboard');
+            populateDashboard(user);
+        }
+
+        function logoutUser() {
+            localStorage.removeItem('wpLoggedIn');
+            localStorage.removeItem('wpCurrentUser');
+            updateNavVisibility();
+            showPage('login');
+        }
+
+        function populateDashboard(user) {
+            document.getElementById('dashUsername').textContent = user.username;
+            document.getElementById('dashEmail').textContent = user.email;
+            document.getElementById('dashFirstName').textContent = user.firstName;
+            document.getElementById('dashAvatar').textContent = user.firstName.charAt(0).toUpperCase();
+            document.getElementById('profileName').value = user.firstName + ' ' + user.lastName;
+            document.getElementById('profileEmail').value = user.email;
+            document.getElementById('profilePhone').value = user.phone || '';
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            const alertBox = document.getElementById('registerAlert');
+            const password = document.getElementById('regPassword').value;
+            const confirm = document.getElementById('regConfirmPassword').value;
+            if (password !== confirm) {
+                alertBox.innerHTML = '<div class="alert alert-error">Passwords do not match.</div>';
+                return;
+            }
+            const userData = {
+                firstName: document.getElementById('regFirstName').value,
+                lastName: document.getElementById('regLastName').value,
+                email: document.getElementById('regEmail').value,
+                username: document.getElementById('regUsername').value,
+                phone: document.getElementById('regPhone').value,
+                password: password,
+                dob: document.getElementById('regDob').value,
+                country: document.getElementById('regCountry').value,
+            };
+            const result = registerUser(userData);
+            if (result.success) {
+                alertBox.innerHTML = '<div class="alert alert-success">Registration successful! Please login.</div>';
+                document.getElementById('registerForm').reset();
+                setTimeout(() => showPage('login'), 1500);
+            } else {
+                alertBox.innerHTML = `<div class="alert alert-error">${result.message}</div>`;
+            }
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const alertBox = document.getElementById('loginAlert');
+            const identifier = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            const result = authenticateUser(identifier, password);
+            if (result.success) {
+                alertBox.innerHTML = '<div class="alert alert-success">Login successful! Redirecting...</div>';
+                setTimeout(() => loginUser(result.user), 500);
+            } else {
+                alertBox.innerHTML = `<div class="alert alert-error">${result.message}</div>`;
+            }
+        }
+
+        function handleAltLogin(event) {
+            event.preventDefault();
+            const alertBox = document.getElementById('altLoginAlert');
+            const username = document.getElementById('altUsername').value;
+            const password = document.getElementById('altPassword').value;
+            const code = document.getElementById('altSecurityCode').value;
+            if (code !== '123456') {
+                alertBox.innerHTML = '<div class="alert alert-error">Invalid security code. Use 123456 for demo.</div>';
+                return;
+            }
+            const result = authenticateUser(username, password);
+            if (result.success) {
+                alertBox.innerHTML = '<div class="alert alert-success">Access granted! Redirecting...</div>';
+                setTimeout(() => loginUser(result.user), 500);
+            } else {
+                alertBox.innerHTML = `<div class="alert alert-error">${result.message}</div>`;
+            }
+        }
+
+        function showDashboardSection(section) {
+            const sections = ['overview', 'wallet', 'withdraw', 'transactions', 'profile'];
+            sections.forEach(s => {
+                document.getElementById('dash-' + s).style.display = s === section ? 'block' : 'none';
+            });
+            document.querySelectorAll('.sidebar .menu a').forEach(a => a.classList.remove('active'));
+            const index = sections.indexOf(section);
+            document.querySelectorAll('.sidebar .menu a')[index].classList.add('active');
+        }
+
+        function selectWithdrawal(method) {
+            if (method === 'wallet') {
+                document.getElementById('optWallet').classList.add('selected');
+                document.getElementById('optBank').classList.remove('selected');
+                document.getElementById('bankSelection').style.display = 'none';
+            } else {
+                document.getElementById('optBank').classList.add('selected');
+                document.getElementById('optWallet').classList.remove('selected');
+                document.getElementById('bankSelection').style.display = 'block';
+                updateBankList();
+            }
+        }
+
+        const banks = {
+            USA: [
+                { flag: '🇺🇸', name: 'Chase Bank', country: 'USA' },
+                { flag: '🇺🇸', name: 'Bank of America', country: 'USA' },
+                { flag: '🇺🇸', name: 'Wells Fargo', country: 'USA' },
+                { flag: '🇺🇸', name: 'Citibank', country: 'USA' },
+                { flag: '🇺🇸', name: 'Capital One', country: 'USA' },
+            ],
+            UK: [
+                { flag: '🇬🇧', name: 'Barclays', country: 'UK' },
+                { flag: '🇬🇧', name: 'HSBC', country: 'UK' },
+                { flag: '🇬🇧', name: 'Lloyds Bank', country: 'UK' },
+            ],
+            CA: [
+                { flag: '🇨🇦', name: 'Royal Bank of Canada', country: 'Canada' },
+                { flag: '🇨🇦', name: 'TD Bank', country: 'Canada' },
+            ],
+            AU: [
+                { flag: '🇦🇺', name: 'Commonwealth Bank', country: 'Australia' },
+                { flag: '🇦🇺', name: 'Westpac', country: 'Australia' },
+            ],
+            DE: [
+                { flag: '🇩🇪', name: 'Deutsche Bank', country: 'Germany' },
+                { flag: '🇩🇪', name: 'Commerzbank', country: 'Germany' },
+            ],
+            FR: [
+                { flag: '🇫🇷', name: 'BNP Paribas', country: 'France' },
+                { flag: '🇫🇷', name: 'Société Générale', country: 'France' },
+            ],
+            ES: [
+                { flag: '🇪🇸', name: 'Santander', country: 'Spain' },
+                { flag: '🇪🇸', name: 'BBVA', country: 'Spain' },
+            ],
+            IT: [
+                { flag: '🇮🇹', name: 'UniCredit', country: 'Italy' },
+                { flag: '🇮🇹', name: 'Intesa Sanpaolo', country: 'Italy' },
+            ],
+            JP: [
+                { flag: '🇯🇵', name: 'Mitsubishi UFJ', country: 'Japan' },
+                { flag: '🇯🇵', name: 'Sumitomo Mitsui', country: 'Japan' },
+            ],
+            CN: [
+                { flag: '🇨🇳', name: 'ICBC', country: 'China' },
+                { flag: '🇨🇳', name: 'Bank of China', country: 'China' },
+            ]
+        };
+
+        let selectedBank = null;
+
+        function updateBankList() {
+            const country = document.getElementById('withdrawCountry').value;
+            const container = document.getElementById('bankListContainer');
+            const bankList = banks[country] || [];
+            container.innerHTML = '';
+            bankList.forEach(bank => {
+                const div = document.createElement('div');
+                div.className = 'bank-item';
+                div.innerHTML = `
+                    <span class="bank-flag">${bank.flag}</span>
+                    <div>
+                        <div class="bank-name">${bank.name}</div>
+                        <div class="bank-country">${bank.country}</div>
+                    </div>
+                `;
+                div.onclick = function() {
+                    document.querySelectorAll('.bank-item').forEach(i => i.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedBank = bank;
+                };
+                container.appendChild(div);
+            });
+            selectedBank = null;
+        }
+
+        function simulateDeposit() {
+            const amount = document.getElementById('depositAmount').value;
+            if (!amount || amount <= 0) {
+                alert('Please enter a valid deposit amount.');
+                return;
+            }
+            alert(`Deposit of $${amount} simulated successfully.`);
+            document.getElementById('depositAmount').value = '';
+        }
+
+        function simulateWithdrawal() {
+            const amount = document.getElementById('withdrawAmount').value;
+            if (!amount || amount <= 0) {
+                document.getElementById('withdrawAlert').innerHTML = '<div class="alert alert-error">Please enter a valid amount.</div>';
+                return;
+            }
+            const method = document.getElementById('optWallet').classList.contains('selected') ? 'Wallet' : 'Bank';
+            if (method === 'Bank' && !selectedBank) {
+                document.getElementById('withdrawAlert').innerHTML = '<div class="alert alert-error">Please select a bank.</div>';
+                return;
+            }
+            const bankInfo = method === 'Bank' ? ` to ${selectedBank.name}` : '';
+            document.getElementById('withdrawAlert').innerHTML = `<div class="alert alert-success">Withdrawal of $${amount} via ${method}${bankInfo} submitted. (Simulation)</div>`;
+            document.getElementById('withdrawAmount').value = '';
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('wpLoggedIn') === 'true') {
+                const user = JSON.parse(localStorage.getItem('wpCurrentUser') || '{}');
+                if (user.username) {
+                    populateDashboard(user);
+                    showPage('dashboard');
+                }
+            }
+            updateNavVisibility();
+        });
+    </script>
+</body>
+</html>
