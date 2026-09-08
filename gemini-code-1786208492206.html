@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Drop</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #10b981;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        .view {
+            display: none;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        /* Navigation */
+        nav {
+            background: var(--card-bg);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+
+        nav .logo {
+            font-weight: bold;
+            font-size: 1.25rem;
+            color: var(--primary);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--text-color);
+        }
+
+        /* Buttons & Forms */
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: var(--primary-dark);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: white;
+        }
+
+        /* Welcome Page Styles */
+        .hero {
+            text-align: center;
+            padding: 4rem 1rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .photo-card {
+            background: var(--card-bg);
+            height: 180px;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            border: 1px dashed #475569;
+        }
+
+        /* Dashboard Styles */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid #334155;
+        }
+
+        .metric-card h3 {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-card .value {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .metric-card .value.income { color: var(--accent); }
+        .metric-card .value.lost { color: var(--danger); }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 0.75rem;
+            border: 1px solid #334155;
+            margin-bottom: 2rem;
+        }
+
+        .card h2 {
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+        }
+
+        .auth-container {
+            max-width: 450px;
+            margin: 2rem auto;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 0.75rem;
+            border: 1px solid #334155;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Navigation (Hidden on Welcome/Auth) -->
+    <nav id="main-nav" style="display: none;">
+        <div class="logo">Daily Drop</div>
+        <ul>
+            <li><a onclick="switchView('home-view')" class="nav-link active">Home</a></li>
+            <li><a onclick="switchView('services-view')" class="nav-link">Services</a></li>
+            <li><a onclick="switchView('dashboard-view')" class="nav-link">Visitor Dashboard</a></li>
+            <li><a onclick="switchView('contact-view')" class="nav-link">Contact</a></li>
+            <li><a onclick="switchView('welcome-view')" style="color: var(--danger);">Logout</a></li>
+        </ul>
+    </nav>
+
+    <!-- 1. WELCOME VIEW -->
+    <div id="welcome-view" class="view active">
+        <div class="hero">
+            <h1>Welcome to Daily Drop</h1>
+            <p>Your secure platform for drops, analytics, and asset management.</p>
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <button onclick="switchView('register-view')">Register</button>
+                <button onclick="switchView('login-view')" style="background: transparent; border: 1px solid var(--primary);">Sign In</button>
+            </div>
+            
+            <div class="photo-grid">
+                <div class="photo-card">Drop Photo 1</div>
+                <div class="photo-card">Drop Photo 2</div>
+                <div class="photo-card">Drop Photo 3</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- REGISTER VIEW -->
+    <div id="register-view" class="view">
+        <div class="auth-container">
+            <h2>Create Account</h2>
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label>Full Name *</label>
+                    <input type="text" required placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label>Country *</label>
+                    <input type="text" required placeholder="United States">
+                </div>
+                <div class="form-group">
+                    <label>Mobile Phone (Optional)</label>
+                    <input type="tel" placeholder="+1 234 567 890">
+                </div>
+                <div class="form-group">
+                    <label>Mail Address *</label>
+                    <input type="email" required placeholder="john@example.com">
+                </div>
+                <div class="form-group">
+                    <label>Password *</label>
+                    <input type="password" required placeholder="••••••••">
+                </div>
+                <button type="submit" style="width: 100%;">Register & Navigate to Home</button>
+            </form>
+            <p style="text-align: center; margin-top: 1rem; font-size: 0.875rem; color: var(--text-muted);">
+                Already have an account? <a onclick="switchView('login-view')" style="color: var(--primary); cursor: pointer;">Sign In</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- LOGIN VIEW -->
+    <div id="login-view" class="view">
+        <div class="auth-container">
+            <h2>Sign In</h2>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Mail Address</label>
+                    <input type="email" required placeholder="john@example.com">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" required placeholder="••••••••">
+                </div>
+                <button type="submit" style="width: 100%;">Sign In</button>
+            </form>
+            <p style="text-align: center; margin-top: 1rem; font-size: 0.875rem; color: var(--text-muted);">
+                Don't have an account? <a onclick="switchView('register-view')" style="color: var(--primary); cursor: pointer;">Register</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- 2. HOME VIEW -->
+    <div id="home-view" class="view">
+        <div class="card">
+            <h2>Home Feed</h2>
+            <p style="color: var(--text-muted);">Explore today's latest updates, drops, and community activities right here.</p>
+        </div>
+    </div>
+
+    <!-- 3. SERVICES VIEW -->
+    <div id="services-view" class="view">
+        <div class="card">
+            <h2>Our Services</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1rem;">We offer secure distribution drops, token tracking, and institutional dashboard solutions.</p>
+            <ul style="list-style: disc; padding-left: 1.5rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 0.5rem;">
+                <li>Automated Daily Drop distributions</li>
+                <li>Real-time ETH income & loss metrics</li>
+                <li>Direct-to-bank fiat conversion and withdrawal options</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 4. VISITOR DASHBOARD -->
+    <div id="dashboard-view" class="view">
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <h3>Total Income</h3>
+                <div class="value income">4.852 ETH</div>
+            </div>
+            <div class="metric-card">
+                <h3>Total Lost (Equivalent)</h3>
+                <div class="value lost">0.421 ETH</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Withdrawal (ETH to Bank)</h2>
+            <form onsubmit="handleWithdrawal(event)">
+                <div class="form-group">
+                    <label>Bank Name</label>
+                    <input type="text" required placeholder="Global Trust Bank">
+                </div>
+                <div class="form-group">
+                    <label>Account Holder Name</label>
+                    <input type="text" required placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label>Account Number / IBAN</label>
+                    <input type="text" required placeholder="1234567890">
+                </div>
+                <div class="form-group">
+                    <label>SWIFT / Routing Code</label>
+                    <input type="text" required placeholder="GLOXYZ12">
+                </div>
+                <button type="submit">Process Withdrawal</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 5. CONTACT VIEW -->
+    <div id="contact-view" class="view">
+        <div class="card">
+            <h2>Contact Support</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1rem;">Need assistance? Reach out to our support team at support@dailydrop.io or fill out the ticket form below.</p>
+            <form onsubmit="alert('Message sent successfully!'); return false;">
+                <div class="form-group">
+                    <label>Your Message</label>
+                    <input type="text" required placeholder="How can we help you today?">
+                </div>
+                <button type="submit">Send Message</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function switchView(viewId) {
+            // Hide all views
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            // Show targeted view
+            document.getElementById(viewId).classList.add('active');
+
+            // Handle Navigation Bar visibility
+            const nav = document.getElementById('main-nav');
+            if (['welcome-view', 'register-view', 'login-view'].includes(viewId)) {
+                nav.style.display = 'none';
+            } else {
+                nav.style.display = 'flex';
+            }
+
+            // Update active nav link style
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            // Automatically navigate to Home after registration
+            switchView('home-view');
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            // Navigate to Home after login
+            switchView('home-view');
+        }
+
+        function handleWithdrawal(e) {
+            e.preventDefault();
+            alert('Withdrawal request submitted successfully!');
+            e.target.reset();
+        }
+    </script>
+</body>
+</html>
